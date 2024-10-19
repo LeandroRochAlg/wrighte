@@ -52,6 +52,9 @@ const Register: React.FC = () => {
                 <InputComponent label="Senha:" type="password" name="password" value={formData.password} onChange={handleChange} required />
                 <InputComponent label="Confirmar Senha:" type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
                 <SubmitButtonComponent title="Registrar" />
+                <div className="mt-4 text-center">
+                    <p className='text-sm'>Já possui uma conta? <a href="/login" className="text-blue-500 hover:text-blue-700 underline">Faça login aqui</a></p>
+                </div>
             </form>
         </div>
     );

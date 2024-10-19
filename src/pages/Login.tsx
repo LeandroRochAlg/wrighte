@@ -27,6 +27,9 @@ const Login = () => {
                 <InputComponent label="Email:" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 <InputComponent label="Senha:" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 <SubmitButtonComponent title="Login" />
+                <div className="mt-4 text-center">
+                    <p className='text-sm'>Não possui uma conta? <a href="/register" className="text-blue-500 hover:text-blue-700 underline">Registre-se aqui</a></p>
+                </div>
             </form>
         </div>
     );
