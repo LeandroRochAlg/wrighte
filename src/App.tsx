@@ -1,20 +1,12 @@
-import { useState } from 'react';
-import MDEditor from '@uiw/react-md-editor';
-import './App.css'
+import { RouterProvider } from 'react-router-dom';
+import Routes from './routes/Routes';
 
 function App() {
-  const [value, setValue] = useState("**Hello World!**");
-
   return (
-    <div className="container" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <MDEditor
-        value={value}
-        onChange={(val) => setValue(val || '')}
-        height="100%"
-        fullscreen={true}
-      />
+    <div>
+      <RouterProvider router={Routes} />
     </div>
-  );
+  )
 }
 
 export default App
