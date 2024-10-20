@@ -11,7 +11,7 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         try {
             e.preventDefault();
-            const response = await api.post('/login', { email, password });
+            const response = await api.post('/users/login', { email, password });
             localStorage.setItem('token', response.data.token);
             window.location.href = '/';
         } catch (error) {

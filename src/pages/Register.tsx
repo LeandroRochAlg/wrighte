@@ -28,7 +28,7 @@ const Register: React.FC = () => {
             return;
         }
 
-        api.post('/register', {
+        api.post('/users/register', {
             username: formData.username,
             email: formData.email,
             password: formData.password
