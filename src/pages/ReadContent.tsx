@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../lib/api';
-import DOMPurify from 'dompurify';
+import { Editor } from '@tinymce/tinymce-react';
 
 const ReadContent: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -29,13 +29,21 @@ const ReadContent: React.FC = () => {
     if (error) return <div>{error}</div>; // Exibe mensagem de erro
     if (!content) return <div>Carregando...</div>;
 
-    const sanitizedContent = DOMPurify.sanitize(content.content);
-
     return (
         <div className='flex flex-col w-[700px] mx-auto mt-3'>
             <h1><span className='font-bold'>Título: </span>{content.title}</h1>
             <hr />
-            <div className='mt-5 border border-gray-300 rounded-md p-2 min-h-[600px]' dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+            <div className='mt-5'>
+                <Editor
+                    value={content.content}
+                    init={{
+                        menubar: false,
+                        toolbar: false,
+                        height: 600,
+                    }}
+                    disabled={true}
+                />
+            </div>
         </div>
     );
 };
