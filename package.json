@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tinymce/tinymce-react": "^5.1.1",
     "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.7",
+    "fs-extra": "^11.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^6.27.0",
+    "tinymce": "^7.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

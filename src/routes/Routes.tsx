@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import Editor from "../pages/Editor";
 
 const Routes = createBrowserRouter([
     {
@@ -29,6 +30,12 @@ const Routes = createBrowserRouter([
         path: "/register",
         element: (
             <Register />
+        )
+    },
+    {
+        path: "/editor",
+        element: (
+            <Editor />
         )
     }
 ])
