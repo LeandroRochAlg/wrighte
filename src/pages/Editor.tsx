@@ -26,22 +26,21 @@ const EditorPage: React.FC = () => {
 
     const handleSave = async () => {
         try {
-            // Enviar os dados para o backend
+            const token = localStorage.getItem('token'); // Pega o token armazenado
             await fetch('http://localhost:3000/users/book-content', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Adiciona o token no cabeçalho
                 },
-                body: JSON.stringify({ title, content }), // Passar o título e o conteúdo
+                body: JSON.stringify({ title, content }),
             });
-
-            // Redirecionar para a página inicial
-            navigate('/');
+    
+            navigate('/'); // Redireciona após salvar
         } catch (error) {
             console.error('Erro ao salvar o conteúdo:', error);
         }
     };
-
     return (
         <div>
             <input 

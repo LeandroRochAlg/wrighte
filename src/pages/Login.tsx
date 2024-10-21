@@ -9,10 +9,11 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
             const response = await api.post('/users/login', { email, password });
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('username', response.data.username); // Armazena o username
             window.location.href = '/';
         } catch (error) {
             console.error(error);

@@ -3,6 +3,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Editor from "../pages/Editor";
 import MainPage from "../pages/MainPage";
+import ReadContent from "../pages/ReadContent";
 
 const Routes = createBrowserRouter([
     {
@@ -35,6 +36,12 @@ const Routes = createBrowserRouter([
         path: "/editor",
         element: (
             <Editor />
+        )
+    },
+    {
+        path: "/content/:id",
+        element: (
+            <ReadContent />
         )
     }
 ])
