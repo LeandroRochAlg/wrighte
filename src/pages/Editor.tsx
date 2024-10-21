@@ -51,7 +51,7 @@ const EditorPage: React.FC = () => {
                 style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
             />
             <Editor
-                apiKey="k71i2888lt5v5mghmdih494kwh7noig1ntvsta0lm9pt1dpc"
+                apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
                 init={{
                     height: 600,
                     menubar: 'file edit view insert format tools',
