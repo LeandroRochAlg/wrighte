@@ -2,14 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Editor from "../pages/Editor";
+import MainPage from "../pages/MainPage";
 
 const Routes = createBrowserRouter([
     {
         path: "/",
         element: (
-            <>
-                <h1>Página inicial</h1>
-            </>
+            <MainPage />
         ),
     },
     {
