@@ -11,7 +11,7 @@ const ReadContent: React.FC = () => {
     useEffect(() => {
         const fetchContent = async () => {
             try {
-                const response = await api.get(`http://localhost:3000/users/content/${id}`); // Ajustar para incluir '/users'
+                const response = await api.get(`/users/content/${id}`); // Ajustar para incluir '/users'
                 setContent(response.data);
             } catch (error: any) {
                 console.error('Erro ao buscar conteúdo:', error);
@@ -32,9 +32,10 @@ const ReadContent: React.FC = () => {
     const sanitizedContent = DOMPurify.sanitize(content.content);
 
     return (
-        <div>
-            <h1>{content.title}</h1>
-            <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+        <div className='flex flex-col w-[700px] mx-auto mt-3'>
+            <h1><span className='font-bold'>Título: </span>{content.title}</h1>
+            <hr />
+            <div className='mt-5 border border-gray-300 rounded-md p-2 min-h-[600px]' dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
         </div>
     );
 };

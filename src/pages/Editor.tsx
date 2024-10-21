@@ -42,14 +42,22 @@ const EditorPage: React.FC = () => {
         }
     };
     return (
-        <div>
-            <input 
-                type="text" 
-                placeholder="Digite o título do livro" 
-                value={title} 
-                onChange={handleTitleChange} 
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-            />
+        <div className='flex flex-col w-[700px] mx-auto mt-3'>
+            <div className='flex flex-row mb-3'>
+                <input 
+                    type="text" 
+                    placeholder="Digite o título do livro" 
+                    value={title} 
+                    onChange={handleTitleChange} 
+                    className="w-full mb-2 px-2 h-10 border border-gray-300 rounded-md"
+                />
+                <button 
+                    onClick={handleSave} 
+                    className="ml-2 px-4 h-10 w-48 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                >
+                    Salvar texto
+                </button>
+            </div>
             <Editor
                 apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
                 init={{
@@ -74,7 +82,6 @@ const EditorPage: React.FC = () => {
                 initialValue="Comece aqui..."
                 onEditorChange={handleEditorChange}
             />
-            <button onClick={handleSave}>Salvar</button>
         </div>
     );
 };
