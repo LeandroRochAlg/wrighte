@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useNavigate } from 'react-router-dom';
-
-
+import api from '../lib/api';
 
 const EditorPage: React.FC = () => {
     const [content, setContent] = useState('');
@@ -26,15 +25,7 @@ const EditorPage: React.FC = () => {
 
     const handleSave = async () => {
         try {
-            const token = localStorage.getItem('token'); // Pega o token armazenado
-            await fetch('http://localhost:3000/users/book-content', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // Adiciona o token no cabeçalho
-                },
-                body: JSON.stringify({ title, content }),
-            });
+            await api.post('/users/book-content', { title, content });
     
             navigate('/'); // Redireciona após salvar
         } catch (error) {
