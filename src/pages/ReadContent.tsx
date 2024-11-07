@@ -11,7 +11,7 @@ const ReadContent: React.FC = () => {
     useEffect(() => {
         const fetchContent = async () => {
             try {
-                const response = await api.get(`/users/content/${id}`); // Ajustar para incluir '/users'
+                const response = await api.get(`/texts/content/${id}`); // Ajustar para incluir '/users'
                 setContent(response.data);
             } catch (error: any) {
                 console.error('Erro ao buscar conteúdo:', error);
@@ -35,6 +35,7 @@ const ReadContent: React.FC = () => {
             <hr />
             <div className='mt-5'>
                 <Editor
+                    apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
                     value={content.content}
                     init={{
                         menubar: false,

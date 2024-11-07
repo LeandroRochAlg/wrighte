@@ -16,7 +16,7 @@ const MainPage: React.FC = () => {
             setUsername(storedUsername);
 
             // Busca os conteúdos do usuário
-            api.get('/users/contents')
+            api.get('/texts/contents')
                 .then((response) => {
                     setContents(response.data);
                 })
