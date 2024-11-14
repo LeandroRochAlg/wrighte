@@ -4,6 +4,7 @@ import Register from "../pages/Register";
 import Editor from "../pages/Editor";
 import MainPage from "../pages/MainPage";
 import ReadContent from "../pages/ReadContent";
+import EditContent from "../pages/EditContent";
 
 const Routes = createBrowserRouter([
     {
@@ -42,6 +43,12 @@ const Routes = createBrowserRouter([
         path: "/content/:id",
         element: (
             <ReadContent />
+        )
+    },
+    {
+        path: "/edit/:id",
+        element: (
+            <EditContent />
         )
     }
 ])

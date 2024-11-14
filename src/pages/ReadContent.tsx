@@ -9,9 +9,14 @@ interface Version {
     date: string;
 }
 
+interface Content {
+    title: string;
+    content: string;
+}
+
 const ReadContent: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [content, setContent] = useState<{ title: string; content: string } | null>(null);
+    const [content, setContent] = useState<Content | null>(null);
     const [error, setError] = useState<string | null>(null); // Estado para erros
     const [showVersions, setShowVersions] = useState<boolean>(false);
     const [versions, setVersions] = useState<Version[]>([]); // Lista de versões
@@ -83,6 +88,9 @@ const ReadContent: React.FC = () => {
                     disabled={true}
                 />
             </div>
+            <a href={`/edit/${id}`} className='my-2 mx-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-bold'>
+                Editar texto
+            </a>
         </div>
     );
 };
