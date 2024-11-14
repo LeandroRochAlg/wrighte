@@ -117,7 +117,7 @@ const ReadContent: React.FC = () => {
                     disabled={true}
                 />
             </div>
-            <a href={`/edit/${contentID}`} className='my-2 mx-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-bold'>
+            <a href={`/edit/${contentID}/${currentVersion}`} className='my-2 mx-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-bold'>
                 Editar texto
             </a>
         </div>

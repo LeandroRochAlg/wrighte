@@ -4,7 +4,7 @@ import api from '../lib/api';
 import { Editor } from '@tinymce/tinymce-react';
 
 const EditContent: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const { contentID, versionID } = useParams<{ contentID: string, versionID: string | undefined }>();
     const [title, setTitle] = useState<string>(''); // Novo estado para o título
     const [content, setContent] = useState<string>('');
     const [error, setError] = useState<string | null>(null); // Estado para erros
@@ -13,7 +13,7 @@ const EditContent: React.FC = () => {
     useEffect(() => {
         const fetchContent = async () => {
             try {
-                const response = await api.get(`/texts/content/${id}`); // Buscar o conteúdo
+                const response = await api.get(`/texts/content-version/${contentID}/${versionID}`); // Buscar o conteúdo
                 setTitle(response.data.title);
                 setContent(response.data.content);
             } catch (error: any) {
@@ -27,7 +27,7 @@ const EditContent: React.FC = () => {
         };
 
         fetchContent();
-    }, [id]);
+    }, [contentID]);
 
     const handleEditorChange = (content: string) => {
         setContent(content);
@@ -35,13 +35,14 @@ const EditContent: React.FC = () => {
 
     const handleSave = async () => {
         try {
-            if (id) {
-                await api.post('/texts/content-version', { id: parseInt(id, 10), content });
+            if (contentID) {
+                console.log('Salvando conteúdo:', contentID, content);
+                await api.post('/texts/content-version', { id: parseInt(contentID, 10), content });
             } else {
-                console.error('ID is undefined');
+                console.error('contentID is undefined');
             }
     
-            navigate(`/content/${id}`); // Redireciona após salvar
+            navigate(`/content/${contentID}`); // Redireciona após salvar
         } catch (error) {
             console.error('Erro ao salvar o conteúdo:', error);
         }

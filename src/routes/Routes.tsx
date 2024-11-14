@@ -52,7 +52,7 @@ const Routes = createBrowserRouter([
         )
     },
     {
-        path: "/edit/:id",
+        path: "/edit/:contentID/:versionID",
         element: (
             <EditContent />
         )
