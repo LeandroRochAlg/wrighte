@@ -1,14 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import Editor from "../pages/Editor";
+import MainPage from "../pages/MainPage";
+import ReadContent from "../pages/ReadContent";
+import EditContent from "../pages/EditContent";
 
 const Routes = createBrowserRouter([
     {
         path: "/",
         element: (
-            <>
-                <h1>Página inicial</h1>
-            </>
+            <MainPage />
         ),
     },
     {
@@ -29,6 +31,30 @@ const Routes = createBrowserRouter([
         path: "/register",
         element: (
             <Register />
+        )
+    },
+    {
+        path: "/editor",
+        element: (
+            <Editor />
+        )
+    },
+    {
+        path: "/content/:contentID",
+        element: (
+            <ReadContent />
+        )
+    },
+    {
+        path: "/content/:contentID/:versionID",
+        element: (
+            <ReadContent />
+        )
+    },
+    {
+        path: "/edit/:contentID/:versionID",
+        element: (
+            <EditContent />
         )
     }
 ])
