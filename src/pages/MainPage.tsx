@@ -26,12 +26,6 @@ const MainPage: React.FC = () => {
         }
     }, [navigate]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username'); // Remove o username ao sair
-        navigate('/login');
-    };
-
     const handleContentClick = (id: number) => {
         navigate(`/content/${id}`);
     };
@@ -39,11 +33,6 @@ const MainPage: React.FC = () => {
     return (document.title = "Página inicial • WrightE",
         <div className='flex flex-col w-[700px] mx-auto'>
             <h1 className='text-4xl font-bold text-center text-blue-700 my-2'>Bem-Vindo ao WrightE, {username}</h1>
-            <nav className='flex w-[300px] mx-auto justify-between bg-slate-200 px-5 rounded-md py-1'>
-                <button className='hover:bg-slate-400 px-2 py-1 rounded-md' onClick={() => navigate('/editor')}>Novo Texto</button>
-                <button className='hover:bg-slate-400 px-2 py-1 rounded-md' onClick={handleLogout}>Logout</button>
-            </nav>
-
             <main className='w-[500px] mx-auto my-3'>
                 <h2 className='text-3xl px-2'>Seus Textos</h2>
                 <ul className='mt-2'>
