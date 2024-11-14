@@ -43,7 +43,7 @@ const Register: React.FC = () => {
         });
     };
 
-    return (
+    return (document.title = "Registrar • WrightE",
         <div className="flex flex-col my-5">
             <form onSubmit={handleSubmit} className='mx-auto bg-gray-400 p-5 rounded-xl flex flex-col'>
                 <TitleComponent title="Registro" />

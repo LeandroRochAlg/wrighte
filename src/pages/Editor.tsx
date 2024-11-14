@@ -32,7 +32,7 @@ const EditorPage: React.FC = () => {
             console.error('Erro ao salvar o conteúdo:', error);
         }
     };
-    return (
+    return (document.title = "Criar texto  • WrightE",
         <div className='flex flex-col w-[700px] mx-auto mt-3'>
             <div className='flex flex-row mb-3'>
                 <input 

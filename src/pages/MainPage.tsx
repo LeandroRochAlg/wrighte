@@ -36,7 +36,7 @@ const MainPage: React.FC = () => {
         navigate(`/content/${id}`);
     };
 
-    return (
+    return (document.title = "Página inicial • WrightE",
         <div className='flex flex-col w-[700px] mx-auto'>
             <h1 className='text-4xl font-bold text-center text-blue-700 my-2'>Bem-Vindo ao WrightE, {username}</h1>
             <nav className='flex w-[300px] mx-auto justify-between bg-slate-200 px-5 rounded-md py-1'>

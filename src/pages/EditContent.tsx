@@ -51,7 +51,7 @@ const EditContent: React.FC = () => {
     if (error) return <div>{error}</div>; // Exibe mensagem de erro
     if (!content) return <div>Carregando...</div>;
 
-    return (
+    return (document.title = `Editar ${title} • WrightE`,
         <div className='flex flex-col w-[700px] mx-auto mt-3 relative'>
             <div className='flex flex-row justify-between h-[50px]'>
                 <h1 className='text-xl my-auto'><span className='font-bold'>Título: </span>{title}</h1>
