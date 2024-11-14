@@ -40,7 +40,13 @@ const Routes = createBrowserRouter([
         )
     },
     {
-        path: "/content/:id",
+        path: "/content/:contentID",
+        element: (
+            <ReadContent />
+        )
+    },
+    {
+        path: "/content/:contentID/:versionID",
         element: (
             <ReadContent />
         )

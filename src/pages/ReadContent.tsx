@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { Editor } from '@tinymce/tinymce-react';
 import VersionModal from '../components/system/VersionModal';
@@ -15,17 +15,18 @@ interface Content {
 }
 
 const ReadContent: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const { contentID, versionID } = useParams<{ contentID: string, versionID: string | undefined }>();
     const [content, setContent] = useState<Content | null>(null);
     const [error, setError] = useState<string | null>(null); // Estado para erros
     const [showVersions, setShowVersions] = useState<boolean>(false);
     const [versions, setVersions] = useState<Version[]>([]); // Lista de versões
     const [currentVersion, setCurrentVersion] = useState<string>(''); // Versão atual
+    const navigate = useNavigate(); // Para navegação de rota ao selecionar uma versão
 
     useEffect(() => {
         const fetchContent = async () => {
             try {
-                const response = await api.get(`/texts/content/${id}`); // Buscar o conteúdo
+                const response = await api.get(`/texts/content/${contentID}`); // Buscar o conteúdo
                 setContent(response.data);
                 setCurrentVersion(response.data.lastVersion);
             } catch (error: any) {
@@ -40,7 +41,7 @@ const ReadContent: React.FC = () => {
 
         const fetchVersions = async () => {
             try {
-                const response = await api.get(`/texts/content-versions-list/${id}`); // Buscar as versões
+                const response = await api.get(`/texts/content-versions-list/${contentID}`); // Buscar as versões
                 setVersions(response.data);
             } catch (error: any) {
                 console.error('Erro ao buscar versões:', error);
@@ -49,7 +50,34 @@ const ReadContent: React.FC = () => {
 
         fetchContent();
         fetchVersions();
-    }, [id]);
+    }, [contentID]);
+
+    useEffect(() => {
+        if (versionID) {
+            try {
+                api.get(`/texts/content-version/${contentID}/${versionID}`)
+                    .then((response) => {
+                        setContent(response.data);
+                        setCurrentVersion(versionID);
+                    })
+                    .catch((error) => {
+                        console.error('Erro ao buscar versão:', error);
+                    });
+            } catch (error: any) {
+                console.error('Erro ao buscar versão:', error);
+                if (error.response) {
+                    setError(error.response.data.message || 'Erro ao buscar versão');
+                } else {
+                    setError('Erro inesperado');
+                }
+            }
+        }
+    }, [versionID, contentID]);
+
+    // Função para alterar a versão
+    const handleSelectVersion = (versionID: string) => {
+        navigate(`/content/${contentID}/${versionID}`); // Altera a rota para incluir o versionID
+    };
 
     if (error) return <div>{error}</div>; // Exibe mensagem de erro
     if (!content) return <div>Carregando...</div>;
@@ -72,6 +100,7 @@ const ReadContent: React.FC = () => {
                         currentVersion={currentVersion}
                         show={showVersions}
                         onClose={() => setShowVersions(false)}
+                        onSelectVersion={handleSelectVersion} // Passando a função de seleção de versão
                     />
                 </div>
             </div>
@@ -88,7 +117,7 @@ const ReadContent: React.FC = () => {
                     disabled={true}
                 />
             </div>
-            <a href={`/edit/${id}`} className='my-2 mx-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-bold'>
+            <a href={`/edit/${contentID}`} className='my-2 mx-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-bold'>
                 Editar texto
             </a>
         </div>

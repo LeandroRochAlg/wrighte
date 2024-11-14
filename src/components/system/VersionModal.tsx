@@ -10,9 +10,10 @@ interface VersionModalProps {
     currentVersion: string;
     show: boolean;
     onClose: () => void;
+    onSelectVersion: (versionID: string) => void; // Função que será chamada ao clicar em uma versão
 }
 
-const VersionModal: React.FC<VersionModalProps> = ({ versions, currentVersion, show, onClose }) => {
+const VersionModal: React.FC<VersionModalProps> = ({ versions, currentVersion, show, onClose, onSelectVersion }) => {
     if (!show || versions.length === 0) return null;
 
     return (
@@ -22,8 +23,12 @@ const VersionModal: React.FC<VersionModalProps> = ({ versions, currentVersion, s
         >
             <ul>
                 {versions.map((version) => (
-                    <li key={version.id} className='p-1 hover:bg-slate-400 cursor-pointer text-xs'>
-                        <span>Versão: <span className={version.id === currentVersion ? 'font-bold italic' : 'italic'}>{version.id}</span></span>
+                    <li
+                        key={version.id}
+                        className={`p-1 hover:bg-slate-400 cursor-pointer text-xs ${version.id === currentVersion ? 'font-bold italic' : 'italic'}`}
+                        onClick={() => onSelectVersion(version.id)} // Chama a função ao clicar
+                    >
+                        <span>Versão: {version.id.slice(0, 3)}...{version.id.slice(-3)}</span>
                         <br />
                         <span className='text-gray-600'>{new Date(version.date).toLocaleDateString()}</span>
                     </li>
