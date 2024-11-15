@@ -8,10 +8,10 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-blue-500 p-4 text-white-100">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-white text-2xl font-bold">
+        <div className="text-2xl font-bold">
           <Link to="/">WrightE</Link>
         </div>
 
@@ -39,14 +39,14 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
           {isAuthenticated ? (
             <button
               onClick={onLogout}
-              className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+              className="bg-pink-500 hover:bg-purple-50 text-white py-2 px-4 rounded"
             >
               Logout
             </button>
           ) : (
             <Link
               to="/login"
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+              className="bg-green-500 hover:bg-green-50 text-white py-2 px-4 rounded"
             >
               Login
             </Link>

@@ -88,7 +88,7 @@ const ReadContent: React.FC = () => {
                 <h1 className='text-xl my-auto'><span className='font-bold'>Título: </span>{content.title}</h1>
                 <div className='relative'>
                     <button
-                        className='p-2 hover:bg-slate-300 my-auto rounded-lg text-sm'
+                        className='p-2 hover:bg-pink-200 border border-pink-200 my-auto rounded-lg text-sm'
                         onClick={() => setShowVersions(!showVersions)}
                     >
                         {`${currentVersion.slice(0, 3)}...${currentVersion.slice(-3)}`}
@@ -104,7 +104,7 @@ const ReadContent: React.FC = () => {
                     />
                 </div>
             </div>
-            <hr />
+            <hr className='border border-pink-50'/>
             <div className='mt-5'>
                 <Editor
                     apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
@@ -117,7 +117,7 @@ const ReadContent: React.FC = () => {
                     disabled={true}
                 />
             </div>
-            <a href={`/edit/${contentID}/${currentVersion}`} className='my-2 mx-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-bold'>
+            <a href={`/edit/${contentID}/${currentVersion}`} className='my-2 mx-auto hover:bg-pink-500 bg-pink-200 text-white-100 font-bold py-2 px-4 rounded-lg'>
                 Editar texto
             </a>
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
+import ButtonComponent from '../components/system/ButtonComponent';
 
 const EditorPage: React.FC = () => {
     const [content, setContent] = useState('');
@@ -34,20 +35,15 @@ const EditorPage: React.FC = () => {
     };
     return (document.title = "Criar texto  • WrightE",
         <div className='flex flex-col w-[700px] mx-auto mt-3'>
-            <div className='flex flex-row mb-3'>
+            <div className='flex flex-row mb-3 h-10 gap-2'>
                 <input 
                     type="text" 
                     placeholder="Digite o título do livro" 
                     value={title} 
                     onChange={handleTitleChange} 
-                    className="w-full mb-2 px-2 h-10 border border-gray-300 rounded-md"
+                    className="w-full mb-2 px-2 h-10 border border-green-200 rounded-md"
                 />
-                <button 
-                    onClick={handleSave} 
-                    className="ml-2 px-4 h-10 w-48 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
-                    Salvar texto
-                </button>
+                <ButtonComponent title="Salvar texto" onClick={handleSave} />
             </div>
             <Editor
                 apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
@@ -68,7 +64,7 @@ const EditorPage: React.FC = () => {
                     content_style: "body { font-family: 'Georgia', serif; font-size: 14px; line-height: 1.5; }",
                     toolbar_location: 'top',
                     resize: true,
-                    image_advtab: true
+                    image_advtab: true,
                 }}
                 initialValue="Comece aqui..."
                 onEditorChange={handleEditorChange}

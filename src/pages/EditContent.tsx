@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { Editor } from '@tinymce/tinymce-react';
+import ButtonComponent from '../components/system/ButtonComponent';
 
 const EditContent: React.FC = () => {
     const { contentID, versionID } = useParams<{ contentID: string, versionID: string | undefined }>();
@@ -53,16 +54,11 @@ const EditContent: React.FC = () => {
 
     return (document.title = `Editar ${title} • WrightE`,
         <div className='flex flex-col w-[700px] mx-auto mt-3 relative'>
-            <div className='flex flex-row justify-between h-[50px]'>
+            <div className='flex flex-row justify-between h-[50px] w-full'>
                 <h1 className='text-xl my-auto'><span className='font-bold'>Título: </span>{title}</h1>
-                <button 
-                    onClick={handleSave} 
-                    className="ml-2 px-4 h-10 w-48 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
-                    Salvar texto
-                </button>
+                <ButtonComponent title='Salvar edição' onClick={handleSave} />
             </div>
-            <hr />
+            <hr className='border border-green-200 mt-2'/>
             <div className='mt-5'>
                 <Editor
                     apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
