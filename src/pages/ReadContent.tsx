@@ -14,6 +14,8 @@ interface Version {
 interface Content {
     title: string;
     content: string;
+    username: string;
+    isOwner: boolean;
 }
 
 interface Comment {
@@ -38,6 +40,13 @@ const ReadContent: React.FC = () => {
     const [selectionInfo, setSelectionInfo] = useState<{ start: number; end: number } | null>(null); // Informações de seleção
     const [showCommentModal, setShowCommentModal] = useState<boolean>(false); // Controle do modal
     const [newComment, setNewComment] = useState<string>(''); // Texto do comentário
+    const [role, setRole] = useState<string>('writer'); // Modo atual: writer ou editor
+
+    // Carrega role
+    useEffect(() => {
+        const storedRole = localStorage.getItem('role') || 'writer';
+        setRole(storedRole);
+    }, [role]);
 
     // Pegar comments da API
     useEffect(() => {
@@ -182,6 +191,10 @@ const ReadContent: React.FC = () => {
                 </div>
             </div>
             <hr className="border border-pink-50" />
+            <h2 className="text-md mt-2">
+                <span className="font-bold">Autor: </span>
+                {content.username}
+            </h2>
             <div className='mt-5'>
                 <Editor
                     apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
@@ -195,12 +208,16 @@ const ReadContent: React.FC = () => {
                     disabled={true}
                 />
             </div>
-            <a href={`/edit/${contentID}/${currentVersion}`} className='my-2 mx-auto hover:bg-pink-500 bg-pink-200 text-white-100 font-bold py-2 px-4 rounded-lg'>
-                Editar texto
-            </a>
-            <button onClick={handleSelection} className='my-2 mx-auto hover:bg-pink-500 bg-pink-200 text-white-100 font-bold py-2 px-4 rounded-lg'>
-                Adicionar comentário
-            </button>
+            {role === 'writer' && content.isOwner && (
+                <a href={`/edit/${contentID}/${currentVersion}`} className='my-2 mx-auto hover:bg-pink-500 bg-pink-200 text-white-100 font-bold py-2 px-4 rounded-lg'>
+                    Editar texto
+                </a>
+            )}
+            {role === 'editor' && (
+                <button onClick={handleSelection} className='my-2 mx-auto hover:bg-pink-500 bg-pink-200 text-white-100 font-bold py-2 px-4 rounded-lg'>
+                    Adicionar comentário
+                </button>
+            )}
             {comments.length > 0 && (
                 <div className="mt-4">
                     <h2 className="font-bold text-xl">Comentários:</h2>

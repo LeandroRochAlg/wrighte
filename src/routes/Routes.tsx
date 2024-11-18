@@ -6,6 +6,9 @@ import MainPage from "../pages/MainPage";
 import ReadContent from "../pages/ReadContent";
 import EditContent from "../pages/EditContent";
 import Layout from "../components/layout/Layout";
+import AboutPage from "../pages/AboutPage";
+import TermsPage from "../pages/TermsPage";
+import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 
 const Routes = createBrowserRouter([
     {
@@ -69,6 +72,30 @@ const Routes = createBrowserRouter([
         element: (
             <Layout>
                 <EditContent />
+            </Layout>
+        )
+    },
+    {
+        path: "/about",
+        element: (
+            <Layout>
+                <AboutPage />
+            </Layout>
+        )
+    },
+    {
+        path: "/terms",
+        element: (
+            <Layout>
+                <TermsPage />
+            </Layout>
+        )
+    },
+    {
+        path: "/privacy",
+        element: (
+            <Layout>
+                <PrivacyPolicyPage />
             </Layout>
         )
     }

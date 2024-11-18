@@ -11,7 +11,8 @@ const EditorPage: React.FC = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token) {
+        const role = localStorage.getItem('role');
+        if (!token || role !== 'writer') {
             navigate('/login');
         }
     }, [navigate]);
