@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 
+interface Content {
+    contentID: number;
+    title: string;
+    versionCount: number;
+    commentsCount: number;
+}
+
 const MainPage: React.FC = () => {
     const navigate = useNavigate();
     const [contents, setContents] = useState<any[]>([]); // Lista de textos
@@ -20,8 +27,12 @@ const MainPage: React.FC = () => {
             const storedRole = localStorage.getItem('role') || 'writer';
             setRole(storedRole);
 
-            // Busca os conteúdos do usuário ou de outros escritores
-            const endpoint = storedRole === 'writer' ? '/texts/contents' : '/texts/all-contents';
+            const endpoint =
+                storedRole === 'writer'
+                    ? `/texts/user-contents/${storedUsername}` // Busca textos do usuário
+                    : '/texts/all-contents'; // Busca todos os textos para editores
+
+            // Faz a chamada API com base no endpoint definido
             api.get(endpoint)
                 .then((response) => {
                     setContents(response.data);
@@ -41,10 +52,9 @@ const MainPage: React.FC = () => {
     };
 
     return (
-        <div className='flex flex-col w-[700px] mx-auto'>
-            <h1 className='text-4xl font-bold text-center text-blue-500 my-2'>
-                Bem-vindo(a) ao WrightE, {username}!
-            </h1>
+        document.title = "Página inicial • WrightE",
+        <div className='flex flex-col w-[700px] mx-auto '>
+            <h1 className='text-4xl font-bold text-center text-blue-500 my-2'>Bem-vindo(a) ao WrightE, {username}!</h1>
             <main className='w-[500px] mx-auto my-3'>
                 {role === 'writer' ? (
                     <>
@@ -53,11 +63,15 @@ const MainPage: React.FC = () => {
                         <ul className='mt-2'>
                             {contents.map((content) => (
                                 <li
-                                    className='cursor-pointer my-1 font-bold hover:bg-pink-50 border border-pink-50 px-2 rounded-md'
-                                    key={content.id}
-                                    onClick={() => handleContentClick(content.id)}
+                                    key={content.contentID}
+                                    className='flex items-center justify-between p-1 my-2 rounded-lg cursor-pointer border border-pink-500 hover:bg-pink-500'
+                                    onClick={() => handleContentClick(content.contentID)}
                                 >
-                                    {content.title}
+                                    <span className='font-bold'>{content.title}</span>
+                                    <div className='flex items-center space-x-2'>
+                                        <span>{content.versionCount} versões</span>
+                                        <span>{content.commentsCount} comentários</span>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
@@ -72,35 +86,35 @@ const MainPage: React.FC = () => {
                     <>
                         {/* Interface para Editor */}
                         <h2 className='text-3xl px-2'>Textos de outros escritores:</h2>
-        <ul className='mt-2'>
-            {contents.map((content) => (
-                <li
-                    className='cursor-pointer my-1 font-bold hover:bg-yellow-50 border border-yellow-50 px-2 rounded-md'
-                    key={content.id}
-                    onClick={() => handleContentClick(content.id)}
-                >
-                    <div className='flex flex-col'>
-                        <span>{content.title}</span>
-                        <span className='text-sm text-gray-500'>
-                            Por: {content.writerName} {/* Nome do escritor */}
-                        </span>
-                        <button
-                            className='text-sm text-blue-500 underline hover:text-blue-700 mt-1'
-                            onClick={(e) => {
-                                e.stopPropagation(); // Impede que o clique abra o texto
-                                navigator.clipboard.writeText(
-                                    `${window.location.origin}/content/${content.id}`
-                                );
-                                alert('Link copiado para o clipboard!');
-                            }}
-                        >
-                            Copiar Link
-                        </button>
-                    </div>
-                </li>
-            ))}
-        </ul>
-    </>
+                        <ul className='mt-2'>
+                            {contents.map((content) => (
+                                <li
+                                    className='cursor-pointer my-1 font-bold hover:bg-yellow-50 border border-yellow-50 px-2 rounded-md'
+                                    key={content.id}
+                                    onClick={() => handleContentClick(content.id)}
+                                >
+                                    <div className='flex flex-col'>
+                                        <span>{content.title}</span>
+                                        <span className='text-sm text-gray-500'>
+                                            Por: {content.writerName} {/* Nome do escritor */}
+                                        </span>
+                                        <button
+                                            className='text-sm text-blue-500 underline hover:text-blue-700 mt-1'
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Impede que o clique abra o texto
+                                                navigator.clipboard.writeText(
+                                                    `${window.location.origin}/content/${content.id}`
+                                                );
+                                                alert('Link copiado para o clipboard!');
+                                            }}
+                                        >
+                                            Copiar Link
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </>
                 )}
             </main>
         </div>
