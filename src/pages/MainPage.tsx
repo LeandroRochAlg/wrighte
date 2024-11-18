@@ -4,9 +4,11 @@ import api from '../lib/api';
 
 const MainPage: React.FC = () => {
     const navigate = useNavigate();
-    const [contents, setContents] = useState<any[]>([]); // Ajuste o tipo conforme necessário
-    const [username, setUsername] = useState<string | null>(null);
+    const [contents, setContents] = useState<any[]>([]); // Lista de textos
+    const [username, setUsername] = useState<string | null>(null); // Nome do usuário
+    const [role, setRole] = useState<string>('writer'); // Modo atual: writer ou editor
 
+    // Carrega os textos e o modo ao montar o componente
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -15,8 +17,12 @@ const MainPage: React.FC = () => {
             const storedUsername = localStorage.getItem('username');
             setUsername(storedUsername);
 
-            // Busca os conteúdos do usuário
-            api.get('/texts/contents')
+            const storedRole = localStorage.getItem('role') || 'writer';
+            setRole(storedRole);
+
+            // Busca os conteúdos do usuário ou de outros escritores
+            const endpoint = storedRole === 'writer' ? '/texts/contents' : '/texts/all-contents';
+            api.get(endpoint)
                 .then((response) => {
                     setContents(response.data);
                 })
@@ -30,18 +36,72 @@ const MainPage: React.FC = () => {
         navigate(`/content/${id}`);
     };
 
-    return (document.title = "Página inicial • WrightE",
-        <div className='flex flex-col w-[700px] mx-auto '>
-            <h1 className='text-4xl font-bold text-center text-blue-500 my-2'>Bem-vindo(a) ao WrightE, {username}!</h1>
+    const handleCreateNewText = () => {
+        navigate('/editor');
+    };
+
+    return (
+        <div className='flex flex-col w-[700px] mx-auto'>
+            <h1 className='text-4xl font-bold text-center text-blue-500 my-2'>
+                Bem-vindo(a) ao WrightE, {username}!
+            </h1>
             <main className='w-[500px] mx-auto my-3'>
-                <h2 className='text-3xl px-2'>Seus textos:</h2>
-                <ul className='mt-2'>
-                    {contents.map((content) => (
-                        <li className='cursor-pointer my-1 font-bold hover:bg-pink-50 border border-pink-50 px-2 rounded-md' key={content.id} onClick={() => handleContentClick(content.id)}>
-                            {content.title}
-                        </li>
-                    ))}
-                </ul>
+                {role === 'writer' ? (
+                    <>
+                        {/* Interface para Escritor */}
+                        <h2 className='text-3xl px-2'>Seus textos:</h2>
+                        <ul className='mt-2'>
+                            {contents.map((content) => (
+                                <li
+                                    className='cursor-pointer my-1 font-bold hover:bg-pink-50 border border-pink-50 px-2 rounded-md'
+                                    key={content.id}
+                                    onClick={() => handleContentClick(content.id)}
+                                >
+                                    {content.title}
+                                </li>
+                            ))}
+                        </ul>
+                        <button
+                            onClick={handleCreateNewText}
+                            className='mt-4 py-2 px-4 bg-green-500 hover:bg-green-700 text-white rounded-md'
+                        >
+                            Criar Novo Texto
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        {/* Interface para Editor */}
+                        <h2 className='text-3xl px-2'>Textos de outros escritores:</h2>
+        <ul className='mt-2'>
+            {contents.map((content) => (
+                <li
+                    className='cursor-pointer my-1 font-bold hover:bg-yellow-50 border border-yellow-50 px-2 rounded-md'
+                    key={content.id}
+                    onClick={() => handleContentClick(content.id)}
+                >
+                    <div className='flex flex-col'>
+                        <span>{content.title}</span>
+                        <span className='text-sm text-gray-500'>
+                            Por: {content.writerName} {/* Nome do escritor */}
+                        </span>
+                        <button
+                            className='text-sm text-blue-500 underline hover:text-blue-700 mt-1'
+                            onClick={(e) => {
+                                e.stopPropagation(); // Impede que o clique abra o texto
+                                navigator.clipboard.writeText(
+                                    `${window.location.origin}/content/${content.id}`
+                                );
+                                alert('Link copiado para o clipboard!');
+                            }}
+                        >
+                            Copiar Link
+                        </button>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    </>
+                )}
             </main>
         </div>
     );
