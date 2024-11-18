@@ -4,6 +4,7 @@ import api from '../lib/api';
 
 interface Content {
     contentID: number;
+    username: string;
     title: string;
     versionCount: number;
     commentsCount: number;
@@ -11,7 +12,7 @@ interface Content {
 
 const MainPage: React.FC = () => {
     const navigate = useNavigate();
-    const [contents, setContents] = useState<any[]>([]); // Lista de textos
+    const [contents, setContents] = useState<Content[]>([]); // Lista de textos
     const [username, setUsername] = useState<string | null>(null); // Nome do usuário
     const [role, setRole] = useState<string>('writer'); // Modo atual: writer ou editor
 
@@ -90,26 +91,32 @@ const MainPage: React.FC = () => {
                             {contents.map((content) => (
                                 <li
                                     className='cursor-pointer my-1 font-bold hover:bg-yellow-50 border border-yellow-50 px-2 rounded-md'
-                                    key={content.id}
-                                    onClick={() => handleContentClick(content.id)}
+                                    key={content.contentID}
+                                    onClick={() => handleContentClick(content.contentID)}
                                 >
                                     <div className='flex flex-col'>
                                         <span>{content.title}</span>
                                         <span className='text-sm text-gray-500'>
-                                            Por: {content.writerName} {/* Nome do escritor */}
+                                            Por: {content.username} {/* Nome do escritor */}
                                         </span>
-                                        <button
-                                            className='text-sm text-blue-500 underline hover:text-blue-700 mt-1'
-                                            onClick={(e) => {
-                                                e.stopPropagation(); // Impede que o clique abra o texto
-                                                navigator.clipboard.writeText(
-                                                    `${window.location.origin}/content/${content.id}`
-                                                );
-                                                alert('Link copiado para o clipboard!');
-                                            }}
-                                        >
-                                            Copiar Link
-                                        </button>
+                                        <div className='flex items-center text-xs justify-between'>
+                                            <div className='space-x-2'>
+                                                <span>{content.versionCount} versões</span>
+                                                <span>{content.commentsCount} comentários</span>
+                                            </div>
+                                            <button
+                                                className='text-sm text-blue-500 underline hover:text-blue-50 mt-1'
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Impede que o clique abra o texto
+                                                    navigator.clipboard.writeText(
+                                                        `${window.location.origin}/content/${content.contentID}`
+                                                    );
+                                                    alert('Link copiado para o clipboard!');
+                                                }}
+                                            >
+                                                Copiar Link
+                                            </button>
+                                        </div>
                                     </div>
                                 </li>
                             ))}
