@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { Editor } from '@tinymce/tinymce-react';
 import VersionModal from '../components/system/VersionModal';
+import CommentComponent from '../components/system/CommentComponent';
+import CommentModal from '../components/system/CommentModal';
 
 interface Version {
     id: string;
@@ -14,14 +16,93 @@ interface Content {
     content: string;
 }
 
+interface Comment {
+    contentID: string;
+    versionID: string;
+    comment: string;
+    selectedText: string;
+    userName: string;
+}
+
 const ReadContent: React.FC = () => {
-    const { contentID, versionID } = useParams<{ contentID: string, versionID: string | undefined }>();
+    const navigate = useNavigate(); // Para navegação de rota ao selecionar uma versão
+    const editorRef = useRef<any>(null);
+    const { contentID, versionID } = useParams<{ contentID: string; versionID: string | undefined }>();
     const [content, setContent] = useState<Content | null>(null);
     const [error, setError] = useState<string | null>(null); // Estado para erros
     const [showVersions, setShowVersions] = useState<boolean>(false);
     const [versions, setVersions] = useState<Version[]>([]); // Lista de versões
     const [currentVersion, setCurrentVersion] = useState<string>(''); // Versão atual
-    const navigate = useNavigate(); // Para navegação de rota ao selecionar uma versão
+    const [comments, setComments] = useState<Comment[]>([]); // Lista de comentários
+    const [selectedText, setSelectedText] = useState<string>(''); // Texto selecionado
+    const [selectionInfo, setSelectionInfo] = useState<{ start: number; end: number } | null>(null); // Informações de seleção
+    const [showCommentModal, setShowCommentModal] = useState<boolean>(false); // Controle do modal
+    const [newComment, setNewComment] = useState<string>(''); // Texto do comentário
+
+    // Pegar comments da API
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const response = await api.get(`/comments/comments/${contentID}/${currentVersion}`);
+                setComments(response.data);
+            } catch (error: any) {
+                console.error('Erro ao buscar comentários:', error);
+            }
+        };
+
+        fetchComments();
+    }, [contentID, currentVersion]);
+
+    const handleSelection = () => {
+        if (editorRef.current) {
+            const editor = editorRef.current;
+            const selectedContent = editor.selection.getContent(); // Texto selecionado
+            const range = editor.selection.getRng(); // Range da seleção
+
+            if (selectedContent.trim()) {
+                setSelectedText(selectedContent);
+                setSelectionInfo({
+                    start: range.startOffset,
+                    end: range.endOffset,
+                });
+                setShowCommentModal(true); // Exibe o modal
+            } else {
+                setSelectedText('');
+                setSelectionInfo(null);
+            }
+        }
+    };
+
+    const handleAddComment = async () => {
+        if (!selectedText || !selectionInfo) return;
+
+        if (!contentID) {
+            console.error('Content ID is undefined');
+            return;
+        }
+
+        const comment: Comment = {
+            contentID,
+            versionID: currentVersion,
+            comment: newComment,
+            selectedText,
+            userName: localStorage.getItem('username') || 'Anônimo',
+        };
+
+        try {
+            await api.post('/comments/comment', {
+                contentID,
+                versionID: currentVersion,
+                comment: comment.comment,
+                selectedText: comment.selectedText,
+            });
+            setComments([...comments, comment]); // Adiciona o comentário à lista
+            setShowCommentModal(false); // Fecha o modal
+            setNewComment(''); // Reseta o input
+        } catch (error) {
+            console.error('Erro ao salvar comentário:', error);
+        }
+    };
 
     useEffect(() => {
         const fetchContent = async () => {
@@ -32,7 +113,7 @@ const ReadContent: React.FC = () => {
             } catch (error: any) {
                 console.error('Erro ao buscar conteúdo:', error);
                 if (error.response) {
-                    setError(error.response.data.message || 'Erro ao buscar conteúdo');
+                    setError(error.response.data.message || 'Erro inesperado');
                 } else {
                     setError('Erro inesperado');
                 }
@@ -74,41 +155,38 @@ const ReadContent: React.FC = () => {
         }
     }, [versionID, contentID]);
 
-    // Função para alterar a versão
-    const handleSelectVersion = (versionID: string) => {
-        navigate(`/content/${contentID}/${versionID}`); // Altera a rota para incluir o versionID
-    };
-
-    if (error) return (document.title = "Erro", <div>{error}</div>); // Exibe mensagem de erro
-    if (!content) return (document.title = "Carregando • WrightE", <div>Carregando...</div>);
+    if (error) return <div>{error}</div>;
+    if (!content) return <div>Carregando...</div>;
 
     return (document.title = `${content.title} • WrightE`,
-        <div className='flex flex-col w-[700px] mx-auto mt-3 relative'>
-            <div className='flex flex-row justify-between h-[50px]'>
-                <h1 className='text-xl my-auto'><span className='font-bold'>Título: </span>{content.title}</h1>
-                <div className='relative'>
+        <div className="flex flex-col w-[700px] mx-auto mt-3 relative">
+            <div className="flex flex-row justify-between h-[50px]">
+                <h1 className="text-xl my-auto">
+                    <span className="font-bold">Título: </span>
+                    {content.title}
+                </h1>
+                <div className="relative">
                     <button
-                        className='p-2 hover:bg-pink-200 border border-pink-200 my-auto rounded-lg text-sm'
+                        className="p-2 hover:bg-pink-200 border border-pink-200 my-auto rounded-lg text-sm"
                         onClick={() => setShowVersions(!showVersions)}
                     >
                         {`${currentVersion.slice(0, 3)}...${currentVersion.slice(-3)}`}
                     </button>
-
-                    {/* Componente VersionModal */}
                     <VersionModal
                         versions={versions}
                         currentVersion={currentVersion}
                         show={showVersions}
                         onClose={() => setShowVersions(false)}
-                        onSelectVersion={handleSelectVersion} // Passando a função de seleção de versão
+                        onSelectVersion={(versionID) => navigate(`/content/${contentID}/${versionID}`)}
                     />
                 </div>
             </div>
-            <hr className='border border-pink-50'/>
+            <hr className="border border-pink-50" />
             <div className='mt-5'>
                 <Editor
                     apiKey={import.meta.env.VITE_TINYMCE_API_KEY as string}
                     value={content.content}
+                    onInit={(_evt, editor) => (editorRef.current = editor)}
                     init={{
                         menubar: false,
                         toolbar: false,
@@ -120,6 +198,33 @@ const ReadContent: React.FC = () => {
             <a href={`/edit/${contentID}/${currentVersion}`} className='my-2 mx-auto hover:bg-pink-500 bg-pink-200 text-white-100 font-bold py-2 px-4 rounded-lg'>
                 Editar texto
             </a>
+            <button onClick={handleSelection} className='my-2 mx-auto hover:bg-pink-500 bg-pink-200 text-white-100 font-bold py-2 px-4 rounded-lg'>
+                Adicionar comentário
+            </button>
+            {comments.length > 0 && (
+                <div className="mt-4">
+                    <h2 className="font-bold text-xl">Comentários:</h2>
+                    {comments.map((comment) => (
+                        <div className="p-2 border border-gray-200 rounded mb-2" key={comment.contentID + comment.versionID}>
+                            <CommentComponent
+                                text={comment.comment}
+                                user={comment.userName}
+                                selectedText={comment.selectedText}
+                            />
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* Modal para Adicionar Comentário */}
+            <CommentModal
+                isOpen={showCommentModal}
+                onClose={() => setShowCommentModal(false)}
+                onSave={handleAddComment}
+                selectedText={selectedText}
+                newComment={newComment}
+                setNewComment={setNewComment}
+            />
         </div>
     );
 };
