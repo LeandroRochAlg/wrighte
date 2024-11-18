@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 
+interface Content {
+    contentID: number;
+    title: string;
+    versionCount: number;
+    commentsCount: number;
+}
+
 const MainPage: React.FC = () => {
     const navigate = useNavigate();
-    const [contents, setContents] = useState<any[]>([]); // Ajuste o tipo conforme necessário
+    const [contents, setContents] = useState<Content[]>([]); // Ajuste o tipo conforme necessário
     const [username, setUsername] = useState<string | null>(null);
 
     useEffect(() => {
@@ -16,7 +23,7 @@ const MainPage: React.FC = () => {
             setUsername(storedUsername);
 
             // Busca os conteúdos do usuário
-            api.get('/texts/contents')
+            api.get(`/texts/user-contents/${storedUsername}`)
                 .then((response) => {
                     setContents(response.data);
                 })
@@ -37,8 +44,16 @@ const MainPage: React.FC = () => {
                 <h2 className='text-3xl px-2'>Seus textos:</h2>
                 <ul className='mt-2'>
                     {contents.map((content) => (
-                        <li className='cursor-pointer my-1 font-bold hover:bg-pink-50 border border-pink-50 px-2 rounded-md' key={content.id} onClick={() => handleContentClick(content.id)}>
-                            {content.title}
+                        <li
+                            key={content.contentID}
+                            className='flex items-center justify-between p-1 my-2 rounded-lg cursor-pointer border border-pink-50 hover:bg-pink-50'
+                            onClick={() => handleContentClick(content.contentID)}
+                        >
+                            <span className='font-bold'>{content.title}</span>
+                            <div className='flex items-center space-x-2'>
+                                <span>{content.versionCount} versões</span>
+                                <span>{content.commentsCount} comentários</span>
+                            </div>
                         </li>
                     ))}
                 </ul>
