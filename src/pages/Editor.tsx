@@ -28,6 +28,8 @@ const EditorPage: React.FC = () => {
     const handleSave = async () => {
         try {
             await api.post('/texts/book-content', { title, content });
+
+            console.log(title);
     
             navigate('/'); // Redireciona após salvar
         } catch (error) {

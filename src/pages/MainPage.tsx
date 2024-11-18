@@ -9,6 +9,13 @@ interface Content {
     commentsCount: number;
 }
 
+interface Content {
+    contentID: number;
+    title: string;
+    versionCount: number;
+    commentsCount: number;
+}
+
 const MainPage: React.FC = () => {
     const navigate = useNavigate();
     const [contents, setContents] = useState<any[]>([]); // Lista de textos
