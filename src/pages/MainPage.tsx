@@ -46,7 +46,7 @@ const MainPage: React.FC = () => {
                     {contents.map((content) => (
                         <li
                             key={content.contentID}
-                            className='flex items-center justify-between p-1 my-2 rounded-lg cursor-pointer border border-pink-50 hover:bg-pink-50'
+                            className='flex items-center justify-between p-1 my-2 rounded-lg cursor-pointer border border-pink-500 hover:bg-pink-500'
                             onClick={() => handleContentClick(content.contentID)}
                         >
                             <span className='font-bold'>{content.title}</span>
