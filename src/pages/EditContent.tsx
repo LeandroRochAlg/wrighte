@@ -7,7 +7,7 @@ import ButtonComponent from '../components/system/ButtonComponent';
 const EditContent: React.FC = () => {
     const { contentID, versionID } = useParams<{ contentID: string, versionID: string | undefined }>();
     const [title, setTitle] = useState<string>(''); // Novo estado para o título
-    const [content, setContent] = useState<string>('');
+    const [content, setContent] = useState<string | null>(null); // Inicialize como null
     const [error, setError] = useState<string | null>(null); // Estado para erros
     const navigate = useNavigate();
 
@@ -30,9 +30,9 @@ const EditContent: React.FC = () => {
         fetchContent();
     }, [contentID]);
 
-    const handleEditorChange = (content: string) => {
-        setContent(content);
-    }
+    const handleEditorChange = (newContent: string) => {
+        setContent(newContent || ''); // Atualiza com uma string vazia se o texto for apagado
+    };
 
     const handleSave = async () => {
         try {
@@ -50,7 +50,7 @@ const EditContent: React.FC = () => {
     };
 
     if (error) return <div>{error}</div>; // Exibe mensagem de erro
-    if (!content) return <div>Carregando...</div>;
+    if (content === null) return <div>Carregando...</div>; // Exibe enquanto o conteúdo não for carregado
 
     return (document.title = `Editar ${title} • WrightE`,
         <div className='flex flex-col w-[700px] mx-auto mt-3 relative'>
@@ -79,9 +79,9 @@ const EditContent: React.FC = () => {
                         content_style: "body { font-family: 'Georgia', serif; font-size: 14px; line-height: 1.5; }",
                         toolbar_location: 'top',
                         resize: true,
-                        image_advtab: true
+                        image_advtab: true,
                     }}
-                    initialValue={content}
+                    value={content} // Usa o valor atualizado do estado
                     onEditorChange={handleEditorChange}
                 />
             </div>
