@@ -9,7 +9,7 @@ const InputComponent = forwardRef<HTMLInputElement, Props>(
         return (
             <div className="mt-2 mb-1">
                 <label className="block text-sm text-white">{label}</label>
-                <input ref={ref} {...rest} className="w-[275px] focus:outline-none focus:underline hover:underline mx-auto border-none bg-white mt-1 rounded-lg h-9 px-3"/>
+                <input ref={ref} {...rest} className="w-[275px] focus:outline-none focus:underline hover:underline mx-auto bg-white mt-1 rounded-lg h-9 px-3 border border-blue-500"/>
             </div>
         );
     }

@@ -4,46 +4,101 @@ import Register from "../pages/Register";
 import Editor from "../pages/Editor";
 import MainPage from "../pages/MainPage";
 import ReadContent from "../pages/ReadContent";
+import EditContent from "../pages/EditContent";
+import Layout from "../components/layout/Layout";
+import AboutPage from "../pages/AboutPage";
+import TermsPage from "../pages/TermsPage";
+import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 
 const Routes = createBrowserRouter([
     {
         path: "/",
         element: (
-            <MainPage />
+            <Layout>
+                <MainPage />
+            </Layout>
         ),
     },
     {
         path: "*",
         element: (
-            <>
+            <Layout>
                 <h1>Página não encontrada</h1>
-            </>
+            </Layout>
         )
     },
     {
         path: "/login",
         element: (
-            <Login />
+            <Layout>
+                <Login />
+            </Layout>
         )
     },
     {
         path: "/register",
         element: (
-            <Register />
+            <Layout>
+                <Register />
+            </Layout>
         )
     },
     {
         path: "/editor",
         element: (
-            <Editor />
+            <Layout>
+                <Editor />
+            </Layout>
         )
     },
     {
-        path: "/content/:id",
+        path: "/content/:contentID",
         element: (
-            <ReadContent />
+            <Layout>
+                <ReadContent />
+            </Layout>
+        )
+    },
+    {
+        path: "/content/:contentID/:versionID",
+        element: (
+            <Layout>
+                <ReadContent />
+            </Layout>
+        )
+    },
+    {
+        path: "/edit/:contentID/:versionID",
+        element: (
+            <Layout>
+                <EditContent />
+            </Layout>
+        )
+    },
+    {
+        path: "/about",
+        element: (
+            <Layout>
+                <AboutPage />
+            </Layout>
+        )
+    },
+    {
+        path: "/terms",
+        element: (
+            <Layout>
+                <TermsPage />
+            </Layout>
+        )
+    },
+    {
+        path: "/privacy",
+        element: (
+            <Layout>
+                <PrivacyPolicyPage />
+            </Layout>
         )
     }
-])
+]);
 
 export default Routes;

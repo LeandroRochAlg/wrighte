@@ -43,9 +43,9 @@ const Register: React.FC = () => {
         });
     };
 
-    return (
+    return (document.title = "Registrar • WrightE",
         <div className="flex flex-col my-5">
-            <form onSubmit={handleSubmit} className='mx-auto bg-gray-400 p-5 rounded-xl flex flex-col'>
+            <form onSubmit={handleSubmit} className='mx-auto border border-blue-500 p-5 rounded-xl flex flex-col'>
                 <TitleComponent title="Registro" />
                 <InputComponent label="Nome de Usuário:" type="text" name="username" value={formData.username} onChange={handleChange} required />
                 <InputComponent label="Email:" type="email" name="email" value={formData.email} onChange={handleChange} required />
@@ -53,7 +53,7 @@ const Register: React.FC = () => {
                 <InputComponent label="Confirmar Senha:" type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
                 <SubmitButtonComponent title="Registrar" />
                 <div className="mt-4 text-center">
-                    <p className='text-sm'>Já possui uma conta? <a href="/login" className="text-blue-500 hover:text-blue-700 underline">Faça login aqui</a></p>
+                    <p className='text-sm'>Já possui uma conta? <a href="/login" className="text-blue-500 hover:text-blue-200 underline">Faça login aqui</a></p>
                 </div>
             </form>
         </div>

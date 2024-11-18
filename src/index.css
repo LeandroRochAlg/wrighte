@@ -4,3 +4,7 @@
 
 @layer base {
 }
+
+body {
+  @apply bg-white-100;
+}
