@@ -9,6 +9,7 @@ const EditContent: React.FC = () => {
     const [title, setTitle] = useState<string>(''); // Novo estado para o título
     const [content, setContent] = useState<string | null>(null); // Inicialize como null
     const [error, setError] = useState<string | null>(null); // Estado para erros
+    const [isOwner, setIsOwner] = useState<boolean>(false); // Estado para verificar se o usuário é o proprietário
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,6 +18,7 @@ const EditContent: React.FC = () => {
                 const response = await api.get(`/texts/content-version/${contentID}/${versionID}`); // Buscar o conteúdo
                 setTitle(response.data.title);
                 setContent(response.data.content);
+                setIsOwner(response.data.isOwner);
             } catch (error: any) {
                 console.error('Erro ao buscar conteúdo:', error);
                 if (error.response) {
@@ -51,6 +53,10 @@ const EditContent: React.FC = () => {
 
     if (error) return <div>{error}</div>; // Exibe mensagem de erro
     if (content === null) return <div>Carregando...</div>; // Exibe enquanto o conteúdo não for carregado
+
+    if (!isOwner) {
+        return <div className='text-xl mx-auto w-[500px] font-bold my-10'>Você não tem permissão para editar este conteúdo.</div>;
+    }
 
     return (document.title = `Editar ${title} • WrightE`,
         <div className='flex flex-col w-[700px] mx-auto mt-3 relative'>
