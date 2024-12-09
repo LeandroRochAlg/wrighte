@@ -5,6 +5,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import VersionModal from '../components/system/VersionModal';
 import CommentComponent from '../components/system/CommentComponent';
 import CommentModal from '../components/system/CommentModal';
+import WritingPointsBadge from '../components/system/WritingPointsBadge';
 
 interface Version {
     id: string;
@@ -16,6 +17,7 @@ interface Content {
     content: string;
     username: string;
     isOwner: boolean;
+    writingPoints: number;
 }
 
 interface Comment {
@@ -24,6 +26,7 @@ interface Comment {
     comment: string;
     selectedText: string;
     userName: string;
+    editorLevel: number;
 }
 
 const ReadContent: React.FC = () => {
@@ -96,6 +99,7 @@ const ReadContent: React.FC = () => {
             comment: newComment,
             selectedText,
             userName: localStorage.getItem('username') || 'Anônimo',
+            editorLevel: localStorage.getItem('editorLevel') ? parseInt(localStorage.getItem('editorLevel')!) : 0,
         };
 
         try {
@@ -147,7 +151,16 @@ const ReadContent: React.FC = () => {
             try {
                 api.get(`/texts/content-version/${contentID}/${versionID}`)
                     .then((response) => {
-                        setContent(response.data);
+                        const newContent: Content = {
+                            title: content!.title,
+                            content: response.data.content,
+                            username: content!.username,
+                            isOwner: content?.isOwner || false,
+                            writingPoints: content?.writingPoints || 0,
+                        };
+
+
+                        setContent(newContent);
                         setCurrentVersion(versionID);
                     })
                     .catch((error) => {
@@ -194,6 +207,7 @@ const ReadContent: React.FC = () => {
             <h2 className="text-md mt-2">
                 <span className="font-bold">Autor: </span>
                 {content.username}
+                <WritingPointsBadge writingPoints={content.writingPoints} />
             </h2>
             <div className='mt-5'>
                 <Editor
@@ -227,6 +241,7 @@ const ReadContent: React.FC = () => {
                                 text={comment.comment}
                                 user={comment.userName}
                                 selectedText={comment.selectedText}
+                                editorLevel={comment.editorLevel}
                             />
                         </div>
                     ))}

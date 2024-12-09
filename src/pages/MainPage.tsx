@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
+import WritingPointsBadge from '../components/system/WritingPointsBadge';
 
 interface Content {
     contentID: number;
@@ -8,6 +9,7 @@ interface Content {
     title: string;
     versionCount: number;
     commentsCount: number;
+    writingPoints: number;
 }
 
 const MainPage: React.FC = () => {
@@ -98,6 +100,7 @@ const MainPage: React.FC = () => {
                                         <span>{content.title}</span>
                                         <span className='text-sm text-gray-500'>
                                             Por: {content.username} {/* Nome do escritor */}
+                                            <WritingPointsBadge writingPoints={content.writingPoints} />
                                         </span>
                                         <div className='flex items-center text-xs justify-between'>
                                             <div className='space-x-2'>
