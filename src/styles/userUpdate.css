@@ -33,12 +33,12 @@
 
 .form-box button {
     padding: 10px 20px;
-    background-color: #007BFF;
+    background-color: #99b83c;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 .form-box button:hover {
-    background-color: #0056b3;
+    background-color: #99b83c;
 }

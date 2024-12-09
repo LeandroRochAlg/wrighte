@@ -40,11 +40,13 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
               Textos
             </Link>
           </li>
-          <li>
-            <Link className="hover:text-gray-300" to="/editor">
+          {role === 'writer' && (
+            <li>
+              <Link className="hover:text-gray-300" to="/editor">
               Novo Texto
-            </Link>
-          </li>
+              </Link>
+            </li>
+          )}
           <li>
             <Link className="hover:text-gray-300" to="/about">
               Sobre
