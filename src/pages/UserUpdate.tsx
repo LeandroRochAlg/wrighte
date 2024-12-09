@@ -1,164 +1,137 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../lib/api'; // Axios configurado com baseURL
+import api from '../lib/api';
+import "../styles/UserUpdate.css";
 
 const UserUpdate: React.FC = () => {
-    const [id, setId] = useState(''); // ID do usuário
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState<string | null>(null); // Mensagens de feedback
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Simula a recuperação de dados do usuário (localStorage ou API)
-        const currentUser = {
-            id: localStorage.getItem('id') || '', // Recupera o ID do localStorage
-            name: localStorage.getItem('username') || '',
-            email: localStorage.getItem('email') || ''
-        };
-        setId(currentUser.id);
-        setName(currentUser.name);
-        setEmail(currentUser.email);
+        const token = localStorage.getItem('token');
+        if(!token){
+            navigate('/login');
+        }else{
+            setName(localStorage.getItem('username') || '');
+            setEmail(localStorage.getItem('email') || '');
+        }
     }, []);
 
-    const handleProfileUpdate = async (e: React.FormEvent) => {
+    const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!name || !email) {
-            setMessage('Nome e email não podem estar vazios.');
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Usuário não autenticado');
             return;
         }
 
         try {
-            await api.put('/update-profile', { id, name, email });
-            setMessage('Perfil atualizado com sucesso!');
-            localStorage.setItem('username', name);
-            localStorage.setItem('email', email);
+            const response = await api.put(
+                '/users/update-profile',
+                { name, email },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                alert('Perfil atualizado com sucesso');
+                localStorage.removeItem('token');
+                localStorage.removeItem('userData');
+                navigate('/login');
+            }
         } catch (error) {
-            setMessage('Erro ao atualizar o perfil. Tente novamente.');
-            console.error('Error updating profile:', error);
+            console.error('Erro ao atualizar perfil:', error);
+            alert('Erro ao atualizar perfil');
         }
     };
 
     const handlePasswordUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!currentPassword || !newPassword || !confirmPassword) {
-            setMessage('Todos os campos de senha devem ser preenchidos.');
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Usuário não autenticado');
             return;
         }
+
+        const currentPassword = (document.getElementById('currentPassword') as HTMLInputElement).value;
+        const newPassword = (document.getElementById('newPassword') as HTMLInputElement).value;
+        const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value;
 
         if (newPassword !== confirmPassword) {
-            setMessage('Nova senha e confirmação não coincidem.');
+            alert('A nova senha e a confirmação não coincidem');
             return;
         }
 
         try {
-            await api.put('/update-password', { id, currentPassword, newPassword });
-            setMessage('Senha atualizada com sucesso! Faça login novamente.');
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            navigate('/login');
-        } catch (error) {
-            setMessage('Erro ao atualizar a senha. Verifique sua senha atual.');
-            console.error('Error updating password:', error);
-        }
-    };
+            const response = await api.put(
+                '/users/update-password',
+                { currentPassword, newPassword },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-    const handleDeleteUser = async () => {
-        if (!window.confirm('Tem certeza de que deseja excluir sua conta? Esta ação é irreversível.')) {
-            return;
-        }
-
-        try {
-            await api.delete('/delete-user', { data: { id } }); // Envia o ID no corpo da requisição
-            setMessage('Usuário deletado com sucesso.');
-            localStorage.clear();
-            navigate('/login');
+            if (response.status === 200) {
+                alert('Senha atualizada com sucesso');
+                localStorage.removeItem('token');
+                localStorage.removeItem('userData');
+                navigate('/login');
+            }
         } catch (error) {
-            setMessage('Erro ao deletar o usuário. Tente novamente.');
-            console.error('Error deleting user:', error);
+            console.error('Erro ao atualizar senha:', error);
+            alert('Erro ao atualizar senha');
         }
     };
 
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-            <h2>Atualizar Perfil</h2>
-            {message && <div style={{ color: 'red', marginBottom: '10px' }}>{message}</div>}
-            <form onSubmit={handleProfileUpdate} style={{ marginBottom: '20px' }}>
-                <div>
-                    <label>Nome:</label>
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        style={{ display: 'block', marginBottom: '10px' }}
-                    />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        style={{ display: 'block', marginBottom: '10px' }}
-                    />
-                </div>
-                <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer' }}>
-                    Salvar
-                </button>
-            </form>
-
-            <h2>Alterar Senha</h2>
-            <form onSubmit={handlePasswordUpdate}>
-                <div>
-                    <label>Senha Atual:</label>
-                    <input
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        style={{ display: 'block', marginBottom: '10px' }}
-                    />
-                </div>
-                <div>
-                    <label>Nova Senha:</label>
-                    <input
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        style={{ display: 'block', marginBottom: '10px' }}
-                    />
-                </div>
-                <div>
-                    <label>Confirmar Nova Senha:</label>
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        style={{ display: 'block', marginBottom: '10px' }}
-                    />
-                </div>
-                <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer' }}>
-                    Salvar
-                </button>
-            </form>
-
-            <button
-                onClick={handleDeleteUser}
-                style={{
-                    marginTop: '20px',
-                    padding: '10px 20px',
-                    cursor: 'pointer',
-                    backgroundColor: 'red',
-                    color: 'white',
-                    border: 'none'
-                }}
-            >
-                Deletar Conta
-            </button>
+        <div className="form-container">
+            <div className="form-box">
+                <h2>Atualizar Perfil</h2>
+                <form onSubmit={handleUpdate}>
+                    <div>
+                        <label>Nome:</label>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <button type="submit">Atualizar</button>
+                </form>
+            </div>
+    
+            <div className="form-box">
+                <h2>Alterar Senha</h2>
+                <form onSubmit={handlePasswordUpdate}>
+                    <div>
+                        <label>Senha atual:</label>
+                        <input type="password" id="currentPassword" />
+                    </div>
+                    <div>
+                        <label>Nova senha:</label>
+                        <input type="password" id="newPassword" />
+                    </div>
+                    <div>
+                        <label>Confirmar nova senha:</label>
+                        <input type="password" id="confirmPassword" />
+                    </div>
+                    <button type="submit">Atualizar senha</button>
+                </form>
+            </div>
         </div>
     );
 };
