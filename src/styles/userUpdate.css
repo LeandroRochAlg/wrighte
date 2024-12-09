@@ -1,0 +1,44 @@
+.form-container {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 50px;
+}
+.form-box {
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 45%;
+    box-sizing: border-box;
+}
+
+.form-box h2 {
+    margin-top: 0;
+}
+
+.form-box form div {
+    margin-bottom: 15px;
+}
+
+.form-box label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-box input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.form-box button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form-box button:hover {
+    background-color: #0056b3;
+}

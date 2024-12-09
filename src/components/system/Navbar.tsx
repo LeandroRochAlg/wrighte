@@ -52,6 +52,11 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
               Sobre
             </Link>
           </li>
+          <li>
+            <Link className="hover:text-gray-300" to="/update">
+              Dados Pessoais
+            </Link>
+          </li>
         </ul>
 
         {/* Botão de alternância de função e autenticação */}
