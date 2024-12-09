@@ -7,6 +7,7 @@ import ButtonComponent from '../components/system/ButtonComponent';
 const EditorPage: React.FC = () => {
     const [content, setContent] = useState('');
     const [title, setTitle] = useState(''); // Novo estado para o título
+    const [minEditorLevel, setMinEditorLevel] = useState<number>(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,9 +26,14 @@ const EditorPage: React.FC = () => {
         setTitle(e.target.value);
     };
 
+    const handleMinEditorLevelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.target.value, 10);
+        setMinEditorLevel(value >= 0 ? value : 0); // Garante que o valor seja pelo menos 0
+    };
+
     const handleSave = async () => {
         try {
-            await api.post('/texts/book-content', { title, content });
+            await api.post('/texts/book-content', { title, content, minEditorLevel });
 
             console.log(title);
     
@@ -46,6 +52,22 @@ const EditorPage: React.FC = () => {
                     onChange={handleTitleChange} 
                     className="w-full mb-2 px-2 h-10 border border-green-200 rounded-md"
                 />
+
+                {/* Campo para definir o nível mínimo de editores */}
+                <div className="flex items-center gap-2 w-2/3">
+                    <label htmlFor="minEditorLevel" className="text-xs text-right">
+                        Nível mínimo para editores visualizarem e comentarem:
+                    </label>
+                    <input
+                        type="number"
+                        id="minEditorLevel"
+                        value={minEditorLevel}
+                        onChange={handleMinEditorLevelChange}
+                        className="w-16 px-2 h-10 border border-green-200 rounded-md text-center"
+                        min="0"
+                    />
+                </div>
+
                 <ButtonComponent title="Salvar texto" onClick={handleSave} />
             </div>
             <Editor
