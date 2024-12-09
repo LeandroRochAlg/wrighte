@@ -68,6 +68,22 @@ const UserUpdate: React.FC = () => {
         }
     };
 
+    const handleDeleteUser = async () => {
+        if (!window.confirm('Tem certeza de que deseja excluir sua conta? Esta ação é irreversível.')) {
+            return;
+        }
+
+        try {
+            await api.delete('/delete-user', { data: { id } }); // Envia o ID no corpo da requisição
+            setMessage('Usuário deletado com sucesso.');
+            localStorage.clear();
+            navigate('/login');
+        } catch (error) {
+            setMessage('Erro ao deletar o usuário. Tente novamente.');
+            console.error('Error deleting user:', error);
+        }
+    };
+
     return (
         <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
             <h2>Atualizar Perfil</h2>
@@ -129,6 +145,20 @@ const UserUpdate: React.FC = () => {
                     Salvar
                 </button>
             </form>
+
+            <button
+                onClick={handleDeleteUser}
+                style={{
+                    marginTop: '20px',
+                    padding: '10px 20px',
+                    cursor: 'pointer',
+                    backgroundColor: 'red',
+                    color: 'white',
+                    border: 'none'
+                }}
+            >
+                Deletar Conta
+            </button>
         </div>
     );
 };
