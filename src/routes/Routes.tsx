@@ -9,6 +9,7 @@ import Layout from "../components/layout/Layout";
 import AboutPage from "../pages/AboutPage";
 import TermsPage from "../pages/TermsPage";
 import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
+import UserUpdate from "../pages/UserUpdate";
 
 const Routes = createBrowserRouter([
     {
@@ -96,6 +97,14 @@ const Routes = createBrowserRouter([
         element: (
             <Layout>
                 <PrivacyPolicyPage />
+            </Layout>
+        )
+    },
+    {
+        path: "/update",
+        element: (
+            <Layout>
+                <UserUpdate />
             </Layout>
         )
     }
