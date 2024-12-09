@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
-import "../styles/UserUpdate.css";
+import "../styles/userUpdate.css";
 
 const UserUpdate: React.FC = () => {
     const [name, setName] = useState('');
