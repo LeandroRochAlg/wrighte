@@ -53,7 +53,7 @@ Siga os passos abaixo para configurar o ambiente de desenvolvimento local:
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/LeandroRochAlg/wrighte-frontend.git
+    git clone https://github.com/LeandroRochAlg/wrighte.git
     cd wrighte-frontend
     ```
 
