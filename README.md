@@ -2,6 +2,8 @@
 
 [PT] Front-end da aplicação web WrightE, conectando escritores amadores a editores e leitores apaixonados.
 
+**[Backend](https://github.com/LeandroRochAlg/wrighte-api)**
+
 ## Índice
 
 - [Sobre](#sobre)
